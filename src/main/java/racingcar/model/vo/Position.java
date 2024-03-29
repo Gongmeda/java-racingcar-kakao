@@ -1,4 +1,4 @@
-package racingcar.model;
+package racingcar.model.vo;
 
 import java.util.Objects;
 
@@ -7,7 +7,7 @@ public class Position implements Comparable<Position>{
     private static final int ZERO = 0;
     private static final String POSITION_UNDER_ZERO_MESSAGE = "위치는 음수일 수 없습니다.";
 
-    private int value;
+    private final int value;
 
     public Position(final int value) {
         checkInvalidPosition(value);
@@ -20,8 +20,8 @@ public class Position implements Comparable<Position>{
         }
     }
 
-    public void moveFront() {
-        value++;
+    public Position moveFront() {
+        return new Position(value + 1);
     }
 
     public int getValue() {

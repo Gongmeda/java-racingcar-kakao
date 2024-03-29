@@ -1,9 +1,7 @@
 package racingcar.model;
 
-import racingcar.CarResponse;
-import racingcar.model.NumberGenerator;
-import racingcar.model.Cars;
-import racingcar.model.StepCount;
+import racingcar.dto.CarResponse;
+import racingcar.model.vo.StepCount;
 
 import java.util.List;
 import java.util.stream.Collectors;

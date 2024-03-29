@@ -1,7 +1,7 @@
 package racingcar;
 
 import racingcar.model.RacingGame;
-import racingcar.model.RandomNumberGenerator;
+import racingcar.infrastructure.RandomNumberGenerator;
 import racingcar.view.InputView;
 import racingcar.view.OutputView;
 

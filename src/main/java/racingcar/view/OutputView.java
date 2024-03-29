@@ -1,6 +1,6 @@
 package racingcar.view;
 
-import racingcar.CarResponse;
+import racingcar.dto.CarResponse;
 
 import java.util.List;
 
