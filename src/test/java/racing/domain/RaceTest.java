@@ -1,101 +1,69 @@
 package racing.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
-import racing.support.StubCarEngine;
+import racing.infra.RandomNumberGenerator;
 
 public class RaceTest {
 
-    @Test
-    void move() {
-        // given
-        CarEngine carEngine = new StubCarEngine(true);
-        Car vectorCar = new Car("vecto", carEngine);
-        Car sageCar = new Car("sage", carEngine);
-        Race race = new Race(List.of(vectorCar, sageCar));
+    private static NumberGenerator zeroGenerator;
+    private static NumberGenerator nineGenerator;
 
-        // when
-        race.move();
+    @BeforeAll
+    static void beforeAll() {
+        zeroGenerator = () -> 0;
+        nineGenerator = () -> 9;
+    }
 
-        // then
-        assertAll(
-                () -> assertThat(vectorCar.getPosition()).isEqualTo(1),
-                () -> assertThat(sageCar.getPosition()).isEqualTo(1)
-        );
+    @ParameterizedTest
+    @ValueSource(ints = {1,2,3,4,5})
+    void 유일한_승자(int round) {
+        Race race = new Race(List.of(
+            new Car("sage", nineGenerator),
+            new Car("vec", zeroGenerator),
+            new Car("amber", zeroGenerator)
+        ));
+
+        for (int i = 0; i < round; ++i) {
+            race.nextRound();
+        }
+
+        assertThat(race.getWinnersName()).containsExactly("sage");
     }
 
     @Test
-    void moveFail() {
-        // given
-        CarEngine carEngine = new StubCarEngine(false);
-        Car vectorCar = new Car("vecto", carEngine);
-        Car sageCar = new Car("sage", carEngine);
-        Race race = new Race(List.of(vectorCar, sageCar));
+    void 공동승리_0라운드() {
+        Race race = new Race(List.of(
+            new Car("sage", nineGenerator),
+            new Car("vec", zeroGenerator),
+            new Car("amber", zeroGenerator)
+        ));
 
-        // when
-        race.move();
-
-        // then
-        assertAll(
-                () -> assertThat(vectorCar.getPosition()).isEqualTo(0),
-                () -> assertThat(sageCar.getPosition()).isEqualTo(0)
-        );
+        assertThat(race.getWinnersName())
+            .containsExactlyInAnyOrder("sage", "vec", "amber");
     }
 
-    @Test
-    void winners() {
-        // given
-        CarEngine carEngine = new StubCarEngine(true);
-        Car vectorCar = new Car("vecto", carEngine);
-        Car sageCar = new Car("sage", carEngine);
-        Car amberCar = new Car("amber", carEngine);
-        Race race = new Race(List.of(vectorCar, sageCar, amberCar));
+    @ParameterizedTest
+    @ValueSource(ints = {1,2,3,4,5})
+    void 공동승리_1라운드_이상(int round) {
+        Race race = new Race(List.of(
+            new Car("sage", nineGenerator),
+            new Car("vec", nineGenerator),
+            new Car("amber", zeroGenerator)
+        ));
 
-        // when
-        sageCar.move();
-        List<String> winners = race.winners();
+        for (int i = 0; i < round; ++i) {
+            race.nextRound();
+        }
 
-        // then
-        assertThat(winners).containsExactlyInAnyOrder("sage");
-    }
-
-    @Test
-    void winners2() {
-        // given
-        CarEngine carEngine = new StubCarEngine(true);
-        Car vectorCar = new Car("vecto", carEngine);
-        Car sageCar = new Car("sage", carEngine);
-        Car amberCar = new Car("amber", carEngine);
-        Race race = new Race(List.of(vectorCar, sageCar, amberCar));
-
-        // when
-        sageCar.move();
-        amberCar.move();
-        List<String> winners = race.winners();
-
-        // then
-        assertThat(winners).containsExactlyInAnyOrder("sage", "amber");
-    }
-
-    @Test
-    void winners3() {
-        // given
-        CarEngine carEngine = new StubCarEngine(true);
-        Car vectorCar = new Car("vecto", carEngine);
-        Car sageCar = new Car("sage", carEngine);
-        Car amberCar = new Car("amber", carEngine);
-        Race race = new Race(List.of(vectorCar, sageCar, amberCar));
-
-        // when
-        race.move();
-        List<String> winners = race.winners();
-
-        // then
-        assertThat(winners).containsExactlyInAnyOrder("sage", "amber", "vecto");
+        assertThat(race.getWinnersName())
+            .containsExactlyInAnyOrder("sage", "vec");
     }
 }

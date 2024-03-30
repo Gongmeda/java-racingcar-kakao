@@ -10,16 +10,22 @@ public class Race {
         this.cars = cars;
     }
 
-    public void move() {
+	public void nextRound() {
         cars.forEach(Car::move);
+	}
+
+    public void forEach(RaceResultCallback predicate) {
+        cars.forEach(car -> predicate.call(car.getName(), car.getPosition()));
     }
 
-    public List<Car> getCars() {
-        return cars;
-    }
-
-    public List<String> winners() {
-        int maxPosition = cars.stream().mapToInt(Car::getPosition).max().orElse(-1);
-        return cars.stream().filter(car -> car.getPosition() == maxPosition).map(Car::getName).collect(Collectors.toList());
+    public List<String> getWinnersName() {
+        int maxPosition = cars.stream()
+            .mapToInt(Car::getPosition)
+            .max()
+            .orElse(0);
+        return cars.stream()
+            .filter(car -> car.locates(maxPosition))
+            .map(Car::getName)
+            .collect(Collectors.toList());
     }
 }

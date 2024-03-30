@@ -1,29 +1,20 @@
 package racing.domain;
 
 public class Car {
-
-    private final int MAX_NAME_LENGTH = 5;
-
-    private final String name;
-    private final CarEngine carEngine;
+    public static final int MOVE_THRESHOLD = 4;
+    private final CarName name;
+    private final NumberGenerator generator;
     private int position;
 
-    public Car(String name, CarEngine carEngine) {
-        validateName(name);
-        this.name = name;
-        this.carEngine = carEngine;
+    public Car(String name, NumberGenerator generator) {
+        this.name = new CarName(name);
+        this.generator = generator;
         this.position = 0;
     }
 
-    private void validateName(String name) {
-        if (name.length() > MAX_NAME_LENGTH) {
-            throw new IllegalArgumentException("Car name length should be below 6.");
-        }
-    }
-
     public void move() {
-        if (carEngine.canMove()) {
-            this.position++;
+        if (generator.generate() >= MOVE_THRESHOLD) {
+            position += 1;
         }
     }
 
@@ -32,6 +23,10 @@ public class Car {
     }
 
     public String getName() {
-        return name;
+        return name.getName();
+    }
+
+    public boolean locates(int position) {
+        return this.position == position;
     }
 }

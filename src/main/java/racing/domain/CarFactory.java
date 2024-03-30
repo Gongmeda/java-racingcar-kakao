@@ -6,18 +6,20 @@ import java.util.stream.Collectors;
 
 public class CarFactory {
 
-    private final CarEngine carEngine;
+    private final NumberGenerator carEngine;
 
-    public CarFactory(CarEngine carEngine) {
+    public CarFactory(NumberGenerator carEngine) {
         this.carEngine = carEngine;
-    }
-
-    public List<Car> fromNames(String text) {
-        String[] names = text.split(",");
-        return Arrays.stream(names).map(this::fromName).collect(Collectors.toList());
     }
 
     private Car fromName(String name) {
         return new Car(name, carEngine);
+    }
+
+    public List<Car> fromCsvNames(String text) {
+        String[] names = text.split(",");
+        return Arrays.stream(names)
+            .map(this::fromName)
+            .collect(Collectors.toList());
     }
 }

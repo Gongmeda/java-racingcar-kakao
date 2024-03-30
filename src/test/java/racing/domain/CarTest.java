@@ -1,57 +1,30 @@
 package racing.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
-import org.junit.jupiter.api.Test;
-
-import racing.support.StubCarEngine;
+import racing.infra.RandomNumberGenerator;
 
 public class CarTest {
 
-    @Test
-    void move() {
-        // given
-        CarEngine carEngine = new StubCarEngine(true);
-        Car car = new Car("vecto", carEngine);
+    @ParameterizedTest
+    @ValueSource(ints = {1,2,3})
+    void 차는_4미만일때_움직이지_않는다(int condition) {
+        Car car = new Car("sage", () -> condition);
 
-        // when
         car.move();
 
-        // then
-        assertThat(car.getPosition()).isEqualTo(1);
-    }
-
-    @Test
-    void moveFail() {
-        // given
-        CarEngine carEngine = new StubCarEngine(false);
-        Car car = new Car("vecto", carEngine);
-
-        // when
-        car.move();
-
-        // then
         assertThat(car.getPosition()).isEqualTo(0);
     }
 
-    @Test
-    void name() {
-        // given
-        CarEngine carEngine = new StubCarEngine(true);
-        Car car = new Car("vecto", carEngine);
+    @ParameterizedTest
+    @ValueSource(ints = {4,5,6,7,8,9})
+    void 차는_4이상일때_움직인다(int condition) {
+        Car car = new Car("sage", () -> condition);
 
-        // when & then
-        assertThat(car.getName()).isEqualTo("vecto");
-    }
+        car.move();
 
-    @Test
-    void exceedNameLength() {
-        // given
-        CarEngine carEngine = new StubCarEngine(true);
-
-        // when & then
-        assertThatThrownBy(() -> new Car("vector", carEngine))
-                .isInstanceOf(RuntimeException.class);
+        assertThat(car.getPosition()).isEqualTo(1);
     }
 }

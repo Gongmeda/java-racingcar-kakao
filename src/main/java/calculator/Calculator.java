@@ -33,15 +33,16 @@ public class Calculator {
         String regex = convertDelimitersToRegex(delimiters);
         String[] tokens = source.split(regex);
         return Arrays.stream(tokens)
-                     .map(Integer::parseInt)
-                     .peek(Calculator::validateNegative)
+                     .map(Calculator::parseIntOrRaiseWhenInvalid)
                      .reduce(Integer::sum)
                      .orElse(0);
     }
 
-    private static void validateNegative(int number) {
+    private static int parseIntOrRaiseWhenInvalid(String token) {
+        int number = Integer.parseInt(token);
         if (number < 0) {
-            throw new IllegalArgumentException("Number should be zero or positive.");
+            throw new RuntimeException("음수는 입력할 수 없습니다");
         }
+        return number;
     }
 }
