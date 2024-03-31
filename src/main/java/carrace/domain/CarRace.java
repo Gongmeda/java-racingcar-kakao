@@ -5,31 +5,23 @@ import java.util.stream.Collectors;
 
 public class CarRace {
 
-	private final CarMoveRule carMoveRule;
 	private final List<Car> cars;
 	private final int totalRound;
 	private int currentRound;
 
-	public CarRace(CarMoveRule carMoveRule, List<Car> cars, int totalRound) {
+	public CarRace(List<Car> cars, int totalRound) {
 		validateDuplicateCarNames(cars);
 		validateRound(totalRound);
 		validateCarsSize(cars);
-		this.carMoveRule = carMoveRule;
 		this.cars = cars;
 		this.totalRound = totalRound;
 	}
 
 	public void runRound() {
 		for (Car car : cars) {
-			moveIfMovable(car);
-		}
-		currentRound++;
-	}
-
-	private void moveIfMovable(Car car) {
-		if (carMoveRule.isMovable()) {
 			car.moveForward();
 		}
+		currentRound++;
 	}
 
 	public List<Car> getWinningCars() {

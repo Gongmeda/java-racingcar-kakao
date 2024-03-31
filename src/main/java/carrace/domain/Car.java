@@ -4,11 +4,17 @@ public class Car {
 
     private static final int MAX_NAME_LENGTH = 5;
     private final String name;
+    private final NumberGenerator numberGenerator;
     private int position = 0;
 
     public Car(String name) {
+        this(name, new RandomNumberGenerator());
+    }
+
+    public Car(String name, NumberGenerator numberGenerator) {
         validateCarNameLength(name);
         this.name = name;
+        this.numberGenerator = numberGenerator;
     }
 
     public String getName() {
@@ -20,7 +26,10 @@ public class Car {
     }
 
     public int moveForward() {
-        return ++position;
+        if (numberGenerator.isMovable()) {
+            return ++position;
+        }
+        return position;
     }
 
     private void validateCarNameLength(String name) {

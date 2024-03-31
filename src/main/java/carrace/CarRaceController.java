@@ -2,7 +2,6 @@ package carrace;
 
 import carrace.domain.Car;
 import carrace.domain.CarRace;
-import carrace.domain.CarMoveRule;
 import carrace.domain.RandomNumberGenerator;
 
 import java.util.List;
@@ -19,7 +18,7 @@ public class CarRaceController {
 	public void play() {
 		List<Car> cars = createCars(view.getCarNames());
 		int round = view.getCarRaceRound();
-		CarRace carRace = new CarRace(new CarMoveRule(new RandomNumberGenerator()), cars, round);
+		CarRace carRace = new CarRace(cars, round);
 		proceedRounds(carRace);
 		endRace(carRace);
 	}

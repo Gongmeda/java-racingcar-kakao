@@ -16,38 +16,35 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 public class CarRaceTest {
 
-    private NumberGenerator randomNumberGenerator;
     private List<Car> cars;
 
     @BeforeEach
     void setUp() {
-        randomNumberGenerator = new RandomNumberGenerator();
 
-        Car car1 = new Car("car1");
-        Car car2 = new Car("car2");
-        Car car3 = new Car("car3");
+        Car car1 = new Car("car1", () -> true);
+        Car car2 = new Car("car2", () -> true);
+        Car car3 = new Car("car3", () -> true);
         cars = new ArrayList<Car>(Arrays.asList(car1, car2, car3));
     }
 
     @Test
     @DisplayName("getCars 메소드는 자동차 리스트를 반환한다.")
     void getCars() {
-        CarRace carRace = new CarRace(new CarMoveRule(randomNumberGenerator), cars, 5);
+        CarRace carRace = new CarRace(cars, 5);
 
         List<Car> result = carRace.getCars();
 
         assertThat(result).containsAll(cars);
     }
 
-    @CsvSource({"4, 1", "3, 0"})
-    @ParameterizedTest
-    @DisplayName("라운드가 진행되면 각 자동차에 대해 moveIfMovable이 호출된다.")
-    void runRound(int generatedNumber, int position) {
-        CarRace carRace = new CarRace(new CarMoveRule(() -> generatedNumber), cars, 5);
+    @Test
+    @DisplayName("라운드가 진행되면 각 자동차에 대해 moveForward()가 호출된다.")
+    void runRound() {
+        CarRace carRace = new CarRace(cars, 5);
 
         carRace.runRound();
 
-        assertThat(carRace.getCars()).extracting(Car::getPosition).containsOnly(position);
+        assertThat(carRace.getCars()).extracting(Car::getPosition).containsOnly(1);
     }
 
     @Test
@@ -67,7 +64,7 @@ public class CarRaceTest {
     private CarRace createCarRaceWithSingleWinner(Car winnerCar) {
         winnerCar.moveForward();
         winnerCar.moveForward();
-        return new CarRace(new CarMoveRule(randomNumberGenerator), cars, 5);
+        return new CarRace(cars, 5);
     }
 
     @Test
@@ -88,9 +85,9 @@ public class CarRaceTest {
     @Test
     @DisplayName("자동차 경주에 참여하는 자동차의 이름은 중복되면 안된다.")
     void validateDuplicateNames() {
-        Car car4 = new Car("car3");
+        Car car4 = new Car("car3", () -> true);
         cars.add(car4);
-        assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> new CarRace(new CarMoveRule(randomNumberGenerator), cars, 5));
+        assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> new CarRace(cars, 5));
     }
 
     private CarRace createCarRaceWithTwoWinners(Car winnerCar1, Car winnerCar2) {
@@ -98,6 +95,6 @@ public class CarRaceTest {
         winnerCar1.moveForward();
         winnerCar2.moveForward();
         winnerCar2.moveForward();
-        return new CarRace(new CarMoveRule(randomNumberGenerator), cars, 5);
+        return new CarRace(cars, 5);
     }
 }
