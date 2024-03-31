@@ -1,12 +1,16 @@
 package model;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import infrastructure.RandomNumberGenerator;
 
 public class RacingTest {
     @Test
@@ -17,7 +21,7 @@ public class RacingTest {
         Car third = generateTestCar("3등", 1);
 
         RacingGame result = new RacingGame(Arrays.asList(first, second, third));
-        assertTrue(result.getWinners().contains(first));
+        assertTrue(result.getWinnerNames().contains(first.getName()));
     }
 
     @Test
@@ -28,8 +32,22 @@ public class RacingTest {
         Car third = generateTestCar("3등", 1);
 
         RacingGame result = new RacingGame(Arrays.asList(first, sameFirst, third));
-        assertTrue(result.getWinners().contains(first));
-        assertTrue(result.getWinners().contains(sameFirst));
+        assertTrue(result.getWinnerNames().contains(first.getName()));
+        assertTrue(result.getWinnerNames().contains(sameFirst.getName()));
+    }
+
+    @Test
+    @DisplayName("랜덤 숫자가 4 이상이면 이동한다.")
+    void randomWinnerTest() {
+        Car first = new Car("1번");
+        Car second = new Car("2번");
+        NumberGenerator numberGenerator = new TestNumberGenerator(Arrays.asList(4,1));
+
+        RacingGame result = new RacingGame(Arrays.asList(first, second));
+        result.moveCars(numberGenerator);
+
+        Assertions.assertThat(result.getWinnerNames()).contains(first.getName());
+        Assertions.assertThat(result.getWinnerNames()).doesNotContain(second.getName());
     }
 
     private Car generateTestCar(String name, int position) {

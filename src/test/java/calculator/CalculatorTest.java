@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CalculatorTest {
@@ -23,7 +24,7 @@ public class CalculatorTest {
 
         int result = calculator.calculate(input);
 
-        assertEquals(21, result);
+        assertThat(result).isEqualTo(21);
     }
 
     @Test
@@ -33,7 +34,7 @@ public class CalculatorTest {
 
         int result = calculator.calculate(input);
 
-        assertEquals(21, result);
+        assertThat(result).isEqualTo(21);
     }
 
     @Test
@@ -43,7 +44,7 @@ public class CalculatorTest {
 
         int result = calculator.calculate(input);
 
-        assertEquals(21, result);
+        assertThat(result).isEqualTo(21);
     }
 
     @Test
@@ -51,13 +52,13 @@ public class CalculatorTest {
     void numberInputTest() {
         String input = "1";
 
-        assertEquals(1, calculator.calculate(input));
+        assertThat(calculator.calculate(input)).isEqualTo(1);
     }
 
     @ParameterizedTest
     @NullAndEmptySource
     void blankInputTest(String input) {
-        assertEquals(0, calculator.calculate(input));
+        assertThat(calculator.calculate(input)).isEqualTo(0);
     }
 
     @Test

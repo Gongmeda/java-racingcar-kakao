@@ -1,33 +1,33 @@
 package controller;
 
 import model.Car;
+import model.NumberGenerator;
 import model.RacingGame;
 import service.RacingService;
-import view.CarInputView;
-import view.CarOutputView;
+import view.RacingGameView;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class RacingController {
-    private final CarInputView carInputView;
-    private final CarOutputView carOutputView;
+    private final RacingGameView racingGameView;
     private final RacingService racingService;
+    private final NumberGenerator numberGenerator;
 
 
-    public RacingController(CarInputView carInputView,
-                            CarOutputView carOutputView,
-                            RacingService racingService) {
-        this.carInputView = carInputView;
-        this.carOutputView = carOutputView;
+    public RacingController(RacingGameView racingGameView,
+                            RacingService racingService,
+                            NumberGenerator numberGenerator) {
+        this.racingGameView = racingGameView;
         this.racingService = racingService;
+        this.numberGenerator = numberGenerator;
     }
 
     public void start() {
         try {
             play();
         } catch (IllegalArgumentException e) {
-            carOutputView.printErrorMessage(e.getMessage());
+            racingGameView.printErrorMessage(e.getMessage());
             start();
         }
     }
@@ -36,24 +36,23 @@ public class RacingController {
         RacingGame racingGame = new RacingGame(createCars());
         int tryNumber = getTryNumber();
 
-        carOutputView.printResultMessage();
+        racingGameView.printResultMessage();
         for (int i = 0; i < tryNumber; i++) {
-            racingGame.moveCars();
-            carOutputView.printCarResult(racingGame.getRacingCars());
+            racingGame.moveCars(numberGenerator);
+            racingGame.getRacingCars()
+                    .forEach(car -> racingGameView.printCarResult(car.getName(), car.getPosition()));
         }
 
-        carOutputView.printWinnerMessage(racingGame);
+        racingGameView.printWinnerMessage(racingGame.getWinnerNames());
     }
 
     private List<Car> createCars() {
-        carOutputView.printCarNameMessage();
-        String carNames = carInputView.getCarNameInput();
+        String carNames = racingGameView.getCarNameInput();
         return racingService.extractCarNames(carNames)
                 .stream().map(Car::new).collect(Collectors.toList());
     }
 
     private int getTryNumber() {
-        carOutputView.printTryNumberMessage();
-        return racingService.validateTryNumber(carInputView.getNumberInput());
+        return racingService.validateTryNumber(racingGameView.getNumberInput());
     }
 }

@@ -1,5 +1,6 @@
 package model;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -27,6 +28,6 @@ public class CarTest {
     void stopTest() {
         Car car = new Car("eve");
         car.run(3);
-        assertEquals(0, car.getPosition());
+        Assertions.assertThat(car.getPosition()).isEqualTo(0);
     }
 }
