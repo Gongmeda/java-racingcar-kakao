@@ -41,14 +41,4 @@ public class Cars {
     public List<Car> getCars() {
         return Collections.unmodifiableList(cars);
     }
-
-    public Cars getMaxPositionCars() {
-        int maxPosition = cars.stream()
-                .mapToInt(Car::getPosition)
-                .max()
-                .orElseThrow();
-        return new Cars(cars.stream()
-                .filter(car -> car.getPosition() == maxPosition)
-                .collect(Collectors.toUnmodifiableList()));
-    }
 }

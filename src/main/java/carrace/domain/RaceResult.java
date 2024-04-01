@@ -26,11 +26,19 @@ public class RaceResult {
     }
 
     public List<String> getWinnerNames() {
-        return last()
-                .getMaxPositionCars()
-                .getCars()
+        return getMaxPositionCars(last())
                 .stream()
                 .map(Car::getName)
+                .collect(Collectors.toUnmodifiableList());
+    }
+
+    public List<Car> getMaxPositionCars(Cars cars) {
+        int maxPosition = cars.getCars().stream()
+                .mapToInt(Car::getPosition)
+                .max()
+                .orElseThrow();
+        return cars.getCars().stream()
+                .filter(car -> car.getPosition() == maxPosition)
                 .collect(Collectors.toUnmodifiableList());
     }
 }

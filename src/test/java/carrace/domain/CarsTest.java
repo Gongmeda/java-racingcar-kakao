@@ -46,47 +46,4 @@ class CarsTest {
             assertThat(newCars.getCars().get(i).getPosition()).isEqualTo(cars.getCars().get(i).getPosition());
         }
     }
-
-    @DisplayName("위치가 가장 큰 자동차가 하나일 때, 이를 반환한다")
-    @Test
-    void getMaxPositionCars_single() {
-        Car pobi = new Car("pobi");
-        Car dino = new Car("dino");
-        Car chris = new Car("chris");
-
-        Car newPobi = pobi.moveForward().moveForward().moveForward();
-        Car newDino = dino.moveForward().moveForward();
-        Cars cars = new Cars(List.of(newPobi, newDino, chris));
-
-        Cars newCars = cars.moveAll(() -> false);
-
-        Cars maxPositionCars = newCars.getMaxPositionCars();
-
-        assertSoftly(softly -> {
-            softly.assertThat(maxPositionCars.getCars().get(0).getName()).isEqualTo("pobi");
-            softly.assertThat(maxPositionCars.getCars().size()).isEqualTo(1);
-        });
-    }
-
-    @DisplayName("위치가 가장 큰 자동차가 하나일 때, 이를 반환한다")
-    @Test
-    void getMaxPositionCars_multiple() {
-        Car pobi = new Car("pobi");
-        Car dino = new Car("dino");
-        Car chris = new Car("chris");
-
-        Car newPobi = pobi.moveForward().moveForward();
-        Car newDino = dino.moveForward().moveForward();
-        Cars cars = new Cars(List.of(newPobi, newDino, chris));
-
-        Cars newCars = cars.moveAll(() -> false);
-
-        Cars maxPositionCars = newCars.getMaxPositionCars();
-
-        assertSoftly(softly -> {
-            softly.assertThat(maxPositionCars.getCars().get(0).getName()).isEqualTo("pobi");
-            softly.assertThat(maxPositionCars.getCars().get(1).getName()).isEqualTo("dino");
-            softly.assertThat(maxPositionCars.getCars().size()).isEqualTo(2);
-        });
-    }
 }
