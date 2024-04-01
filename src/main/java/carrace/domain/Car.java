@@ -15,12 +15,12 @@ public class Car {
     }
 
     private Car(String name, int position) {
+        validateName(name);
         this.name = name;
         this.position = position;
-        validateName();
     }
 
-    private void validateName() {
+    private void validateName(String name) {
         if (name.length() > 5) {
             throw new IllegalArgumentException("자동차의 이름은 5자이하여야 합니다.");
         }

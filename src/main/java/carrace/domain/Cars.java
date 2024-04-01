@@ -9,11 +9,11 @@ public class Cars {
     private final List<Car> cars;
 
     public Cars(List<Car> cars) {
+        validateDuplicateNames(cars);
         this.cars = cars;
-        validateDuplicateNames();
     }
 
-    private void validateDuplicateNames() {
+    private void validateDuplicateNames(List<Car> cars) {
         if (cars.size() != cars.stream().distinct().count()) {
             throw new IllegalArgumentException("중복된 이름이 존재합니다.");
         }
