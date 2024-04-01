@@ -1,6 +1,7 @@
 package carrace.domain;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,7 +22,7 @@ public class RaceResult {
     }
 
     public List<Cars> getRoundCars() {
-        return roundCars;
+        return Collections.unmodifiableList(roundCars);
     }
 
     public List<String> getWinnerNames() {
